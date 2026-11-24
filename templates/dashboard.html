@@ -1,0 +1,164 @@
+{% extends "home.html" %}
+{% load static %}
+{% block body_class %}admin-page{% endblock %}
+{% block header %}
+<header class="site-header admin-header">
+  <div class="wrap head-row">
+    {% if request.user.is_superuser %}
+    <a class="brand" href="{% url 'dashboard' %}" aria-label="Dashboard admin">
+      <img src="{% static 'portfolio/images/onigiri.png' %}" width="32" height="32" alt="" />
+    </a>
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-label="Navigasi admin"
+      aria-expanded="false"
+      aria-controls="admin-navigation"
+      hidden
+    >
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="admin-navigation" class="site-nav" aria-label="Navigasi admin">
+      <a href="{% url 'dashboard' %}"{% if request.resolver_match.url_name == 'dashboard' %} aria-current="page"{% endif %}>Proyek</a>
+      <a href="{% url 'inbox' %}"{% if panel == 'inbox' %} aria-current="page"{% endif %}>Pesan</a>
+      <a href="{% url 'home' %}">Lihat situs</a>
+      <form method="post" action="{% url 'admin_logout' %}">
+        {% csrf_token %}
+        <button class="text-button" type="submit">Keluar</button>
+      </form>
+    </nav>
+    {% else %}
+    <a class="brand" href="{% url 'home' %}" aria-label="Beranda">
+      <img src="{% static 'portfolio/images/onigiri.png' %}" width="32" height="32" alt="" />
+    </a>
+    <a href="{% url 'home' %}">Kembali ke portofolio</a>
+    {% endif %}
+  </div>
+</header>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block title %}{{ heading }} | Athif{% endblock %}
+{% block content %}
+{% if panel == "editor" %}
+<section class="wrap admin-content editor-panel">
+  <a href="{% url 'dashboard' %}">Dashboard proyek</a>
+  <div class="panel-title inline-stickers">
+    <h1>{{ heading }}</h1>
+    <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+  </div>
+  <form method="post" enctype="multipart/form-data" class="form-stack">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      {% if field.name != "remove_image" or has_image %}
+        {% if field.name == "image_upload" %}
+        <div data-image-preview>{% if has_image %}
+          <img class="preview" src="{% url 'project_image' project.pk %}" alt="Pratinjau gambar proyek" />
+        {% endif %}</div>
+        {% endif %}
+        <div class="editor-field{% if field.field.widget.input_type == 'checkbox' %} checkbox-field{% endif %}">
+          {{ field.as_field_group }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    <div class="row-actions">
+      <button class="button primary" type="submit">Simpan proyek</button>
+      <a href="{% url 'dashboard' %}">Batal</a>
+    </div>
+  </form>
+</section>
+{% elif panel == "delete" %}
+<section class="wrap admin-content editor-panel">
+  <div class="panel-title inline-stickers">
+    <h1>Hapus proyek</h1>
+    <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+  </div>
+  <p>Hapus “{{ project.title }}” beserta gambarnya secara permanen?</p>
+  <form method="post" class="row-actions">
+    {% csrf_token %}
+    <button class="button danger" type="submit">Hapus proyek</button>
+    <a href="{% url 'dashboard' %}">Batal</a>
+  </form>
+</section>
+{% elif panel == "inbox" %}
+<section class="wrap admin-content editor-panel">
+  <div class="panel-title inline-stickers">
+    <h1>Pesan masuk</h1>
+    <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+  </div>
+  <ul class="dashboard-list">
+    {% for item in items %}
+    <li class="inbox-item">
+      <h2>{{ item.name }}</h2>
+      <p class="muted">{{ item.created_at|date:"j F Y, H:i" }}</p>
+      <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+      <div class="description">{{ item.body|linebreaks }}</div>
+    </li>
+    {% empty %}
+    <li class="empty-state">Belum ada pesan masuk.</li>
+    {% endfor %}
+  </ul>
+  {% with page=items %}
+  {% if page.has_other_pages %}
+  <nav class="pagination" aria-label="Halaman hasil">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Sebelumnya</a>{% endif %}
+    <span>Halaman {{ page.number }} dari {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Berikutnya</a>{% endif %}
+  </nav>
+  {% endif %}
+  {% endwith %}
+</section>
+{% else %}
+<section class="wrap admin-content">
+  {% for message in messages %}
+    <p class="feedback" role="status">{{ message }}</p>
+  {% endfor %}
+  <header class="action-row">
+    <div>
+      <div class="panel-title inline-stickers">
+        <h1>Dashboard proyek</h1>
+        <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+      </div>
+      <p>Kelola proyek dan visibilitasnya di portofolio.</p>
+    </div>
+    <a class="button primary" href="{% url 'project_create' %}">Tambah proyek</a>
+  </header>
+  <ul class="dashboard-list">
+    {% for project in projects %}
+    <li class="dashboard-row">
+      <div class="thumbnail">
+        {% if project.has_image %}
+          <img src="{% url 'project_image' project.pk %}" alt="" loading="lazy" width="96" height="64" />
+        {% else %}
+          <span>Tanpa gambar</span>
+        {% endif %}
+      </div>
+      <div class="dashboard-info">
+        <h2>{{ project.title }}</h2>
+        <p>{{ project.category }}</p>
+      </div>
+      <p class="project-visibility{% if project.published %} is-published{% endif %}">
+        {% if project.published %}Terbit{% else %}Draf{% endif %}
+      </p>
+      <div class="row-actions">
+        {% if project.published %}<a href="{% url 'project_detail' project.pk %}">Lihat</a>{% endif %}
+        <a href="{% url 'project_edit' project.pk %}">Edit</a>
+        <a href="{% url 'project_delete' project.pk %}">Hapus</a>
+      </div>
+    </li>
+    {% empty %}
+    <li class="empty-state">Belum ada proyek. Tambahkan proyek pertama Anda.</li>
+    {% endfor %}
+  </ul>
+  {% with page=projects %}
+  {% if page.has_other_pages %}
+  <nav class="pagination" aria-label="Halaman hasil">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Sebelumnya</a>{% endif %}
+    <span>Halaman {{ page.number }} dari {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Berikutnya</a>{% endif %}
+  </nav>
+  {% endif %}
+  {% endwith %}
+</section>
+{% endif %}
+{% endblock %}

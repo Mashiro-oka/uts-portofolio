@@ -1,0 +1,214 @@
+{% load static %}
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Portofolio Athif. Temukan proyek, studi, dan cara menghubungi Athif." />
+    <title>
+      {% block title %}
+        {% if project %}{{ project.title }} | Athif{% else %}'Athif | Portofolio{% endif %}
+      {% endblock %}
+    </title>
+    <link rel="icon" href="{% static 'portfolio/images/onigiri.png' %}" type="image/png" />
+    <link rel="stylesheet" href="{% static 'portfolio/css/style.css' %}?v=11" />
+    <script src="{% static 'portfolio/js/site.js' %}?v=2" defer></script>
+  </head>
+  <body class="{% block body_class %}{% if not project %}portfolio-home{% endif %}{% endblock %}">
+    <a class="skip-link" href="#main">Lewati ke konten</a>
+    {% block header %}
+    <header class="site-header">
+      <div class="wrap head-row">
+        <a class="brand" href="{% url 'home' %}#home" aria-label="Beranda">
+          <img src="{% static 'portfolio/images/onigiri.png' %}" width="32" height="32" alt="" />
+        </a>
+        <button
+          type="button"
+          class="menu-toggle"
+          aria-label="Navigasi utama"
+          aria-expanded="false"
+          aria-controls="public-navigation"
+          hidden
+        >
+          <span aria-hidden="true"></span>
+        </button>
+        <nav id="public-navigation" class="site-nav" aria-label="Navigasi utama">
+          <a href="{% url 'home' %}#home">Beranda</a>
+          <a href="{% url 'home' %}#about">Tentang</a>
+          <a href="{% url 'home' %}#study">Studi</a>
+          <a href="{% url 'home' %}#project">Proyek</a>
+          <a href="{% url 'home' %}#contact">Kontak</a>
+        </nav>
+      </div>
+    </header>
+    {% endblock %}
+    <main id="main">
+      {% block content %}
+      {% if project %}
+      <article class="wrap case-study">
+        <a href="{% url 'home' %}#project">Semua proyek</a>
+        <header>
+          <h1>{{ project.title }}</h1>
+          <p class="muted">{{ project.category }}</p>
+          <p class="lead">{{ project.summary }}</p>
+        </header>
+        {% if project.has_image %}
+        <img src="{% url 'project_image' project.pk %}" alt="Gambar proyek {{ project.title }}" />
+        {% endif %}
+        <div class="description">{{ project.description|linebreaks }}</div>
+        {% if project.repository_url %}
+        <a class="button" href="{{ project.repository_url }}">Buka repo</a>
+        {% endif %}
+      </article>
+      {% else %}
+      <section id="home" class="wrap hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1 id="hero-title">'Athif M.N.<span class="hero-paw" aria-hidden="true">🐾</span></h1>
+            <p>Programmer pemula yang masih belajar cara ngoding dan suka mengotak-atik kode, meski terkadang malah merusak apa yang sudah kubuat sendiri. 🗿</p>
+            <a href="#project">Lihat proyek</a>
+          </div>
+          <figure class="hero-art">
+            <img src="{% static 'portfolio/images/okayu-cutout.webp' %}" alt="" width="940" height="771" fetchpriority="high" />
+          </figure>
+        </div>
+      </section>
+      <div class="wrap profile-notes">
+        <section id="about" class="note-panel" aria-labelledby="about-title">
+          <div class="panel-title">
+            <h2 id="about-title">Tentang</h2>
+            <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+          </div>
+          <p>Aku mahasiswa Informatika yang masih belajar pemrograman dan tertarik memahami bagaimana teknologi bekerja.</p>
+          <p>Di luar dunia pemrograman, aku suka musik, anime, dan VTuber. Aku juga seorang <strong>Onigiryaa</strong>, sebutan untuk penggemar <strong>Nekomata Okayu</strong> dari hololive. 🍙</p>
+          <p>Aku belajar dengan membangun proyek, melakukan kesalahan, dan memperbaikinya kembali.</p>
+          <dl class="profile-facts">
+            <div>
+              <dt>Jurusan</dt>
+              <dd>Informatika</dd>
+            </div>
+            <div>
+              <dt>Lokasi</dt>
+              <dd>Yogyakarta, Indonesia</dd>
+            </div>
+          </dl>
+        </section>
+        <section id="study" class="note-panel" aria-labelledby="study-title">
+          <div class="panel-title">
+            <h2 id="study-title">Studi</h2>
+            <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+          </div>
+          <p>Saat ini aku sedang mempelajari pengembangan web, mulai dari frontend, backend, hingga pengelolaan database.</p>
+          <div class="study-topics">
+            <div>
+              <h3>Teknologi</h3>
+              <dl class="study-tools">
+                <div>
+                  <dt>Struktur</dt>
+                  <dd>HTML5</dd>
+                </div>
+                <div>
+                  <dt>Tampilan</dt>
+                  <dd>CSS, Tailwind CSS</dd>
+                </div>
+                <div>
+                  <dt>Interaksi</dt>
+                  <dd>JavaScript</dd>
+                </div>
+                <div>
+                  <dt>Sisi server</dt>
+                  <dd>Python, Django</dd>
+                </div>
+                <div>
+                  <dt>Basis data</dt>
+                  <dd>PostgreSQL (Supabase)</dd>
+                </div>
+              </dl>
+            </div>
+            <div>
+              <h3>Yang sedang kulatih</h3>
+              <ul class="study-practice">
+                <li>Desain web responsif</li>
+                <li>Dasar aksesibilitas</li>
+                <li>Penulisan kode yang rapi</li>
+                <li>Dasar desain antarmuka</li>
+              </ul>
+            </div>
+          </div>
+          <div class="study-method">
+            <h3>Cara belajar</h3>
+            <p>Aku lebih suka belajar melalui praktik langsung daripada sekedar membaca teori. Kalau muncul eror, ya sekalian belajar debugging.</p>
+          </div>
+        </section>
+      </div>
+      <section id="project" class="wrap projects-section" aria-labelledby="project-title">
+        <div class="panel-title inline-stickers">
+          <h2 id="project-title">Proyek</h2>
+          <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+        </div>
+        <div class="project-list">
+          {% for project in projects %}
+          <article class="project-row">
+            {% if project.has_image %}
+            <img src="{% url 'project_image' project.pk %}" alt="Gambar proyek {{ project.title }}" loading="lazy" width="240" height="150" />
+            {% endif %}
+            <div>
+              <h3><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></h3>
+              <p class="muted">{{ project.category }}</p>
+              <p>{{ project.summary }}</p>
+              {% if project.repository_url %}
+              <a class="project-repo-link" href="{{ project.repository_url }}" aria-label="Buka repo {{ project.title }}">Buka repo</a>
+              {% endif %}
+            </div>
+          </article>
+          {% empty %}
+          <p class="empty-state">Belum ada proyek yang dipublikasikan.</p>
+          {% endfor %}
+          {% if projects.has_other_pages %}
+          <nav class="pagination" aria-label="Halaman hasil">
+            {% if projects.has_previous %}<a href="?page={{ projects.previous_page_number }}#project">Sebelumnya</a>{% endif %}
+            <span>Halaman {{ projects.number }} dari {{ projects.paginator.num_pages }}</span>
+            {% if projects.has_next %}<a href="?page={{ projects.next_page_number }}#project">Berikutnya</a>{% endif %}
+          </nav>
+          {% endif %}
+        </div>
+      </section>
+      <section id="contact" class="contact-section" aria-labelledby="contact-title">
+        <div class="wrap section-row contact-panel">
+          <div class="contact-copy">
+            <div class="panel-title inline-stickers">
+              <h2 id="contact-title">Kontak</h2>
+              <span class="panel-stickers" aria-hidden="true"><span>🍙</span><span>🐾</span></span>
+            </div>
+            <p>Kalau ada yang ingin kamu tanyakan atau diskusikan soal proyek saya, tulis di sini.</p>
+          </div>
+          <form method="post" action="{% url 'home' %}#contact" class="form-stack">
+            {% csrf_token %}
+            {% for message in messages %}
+              <p class="feedback" role="status">{{ message }}</p>
+            {% endfor %}
+            {{ form.as_div }}
+            <div><button class="button primary" type="submit">Kirim pesan</button></div>
+          </form>
+        </div>
+      </section>
+      {% endif %}
+      {% endblock %}
+    </main>
+    {% block footer %}
+    <footer class="site-footer">
+      <div class="wrap foot-row">
+        <a class="brand" href="{% url 'home' %}#home">
+          <img src="{% static 'portfolio/images/onigiri.png' %}" width="32" height="32" alt="" />
+          <span>© 'Athif | 2026</span>
+        </a>
+        {% if not project %}
+        <span>Ilustrasi Okayu oleh <a href="https://ko-fi.com/kukie_nyan">@Kukie_nyan</a></span>
+        {% else %}
+        <span>Portofolio pribadi</span>
+        {% endif %}
+      </div>
+    </footer>
+    {% endblock %}
+  </body>
+</html>
