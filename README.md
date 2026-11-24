@@ -102,4 +102,14 @@ requirements.txt            Dependensi Python
 
 `.env`, virtual environment, database SQLite, hasil `collectstatic`, dan gambar sumber di `assets/source/` disimpan secara lokal dan diabaikan Git. Aset yang dipakai situs berada di `static/portfolio/images/`.
 
-Kredit ilustrasi Okayu mengikuti tanda tangan pada gambar sumber. Ikon onigiri berasal dari glif Noto Emoji. [Profil @Kukie_nyan](https://ko-fi.com/kukie_nyan) · [Noto Emoji](https://github.com/googlefonts/noto-emoji)
+---
+
+## Kredit Aset Visual
+
+- **Ilustrasi Nekomata Okayu:** [@Kukie_nyan](https://ko-fi.com/kukie_nyan)
+  - Menggunakan versi ilustrasi yang dipublikasikan secara gratis oleh kreatornya, bukan versi berbayar.
+- **Ikon onigiri:** [Noto Emoji](https://github.com/googlefonts/noto-emoji)
+
+Seluruh hak cipta atas aset visual tetap menjadi milik pemegang hak cipta masing-masing.
+
+Proyek ini dibuat untuk kebutuhan pembelajaran dan praktikum Ujian Tengah Semester (UTS), serta tidak ditujukan untuk kepentingan komersial.
