@@ -2,7 +2,7 @@
 
 Portofolio Athif adalah situs Django untuk menampilkan profil, catatan studi, dan proyek. Pengunjung bisa mengirim pesan dari halaman publik. Admin mengelola proyek dan membaca pesan melalui dashboard terpisah.
 
-Dokumen ini mencakup perencanaan, arsitektur, alur data, implementasi, pengujian, dan persiapan deploy. Panduan menjalankan proyek tersedia di [README](../README.md). Lihat juga [hasil dan cara pengujian](testing.md).
+Aplikasi sudah dirilis ke Vercel dan memakai Supabase untuk menyimpan data produksi. Dokumen ini mencakup perencanaan, arsitektur, alur data, implementasi, pengujian, dan pemeliharaan setelah rilis. Panduan menjalankan proyek tersedia di [README](../README.md). Lihat juga [hasil dan cara pengujian](testing.md).
 
 ## 1. Perencanaan
 
@@ -32,7 +32,7 @@ Dokumen ini mencakup perencanaan, arsitektur, alur data, implementasi, pengujian
 | Implementasi        | URL, view, formulir, autentikasi admin, publikasi, dan kotak masuk dihubungkan.                                                     |
 | Integrasi database  | SQLite disediakan untuk pengembangan lokal. PostgreSQL Supabase dipilih melalui `DATABASE_URL`.                                     |
 | Pengujian           | Migrasi, akses publik dan admin, operasi proyek, gambar, dan pesan diperiksa dengan database lokal.                                 |
-| Rilis               | Variabel lingkungan dan migrasi produksi disiapkan, lalu aplikasi dapat dideploy manual ke Vercel dan diuji lewat URL hasil deploy. |
+| Rilis               | Aplikasi sudah dideploy manual ke Vercel. Pemilik proyek mengonfirmasi fitur berjalan tanpa kendala di produksi. |
 
 ## 2. Teknologi dan struktur
 
@@ -46,7 +46,7 @@ Dokumen ini mencakup perencanaan, arsitektur, alur data, implementasi, pengujian
 | Pillow                    | Memeriksa isi, format, dan dimensi gambar unggahan.                                 |
 | SQLite                    | Database lokal ketika `DATABASE_URL` kosong.                                        |
 | Supabase PostgreSQL       | Database yang menyimpan data produksi ketika `DATABASE_URL` diarahkan ke Supabase.  |
-| Vercel                    | hosting untuk aplikasi Django dan aset statis.                                      |
+| Vercel                    | Hosting produksi untuk aplikasi Django dan aset statis.                                      |
 
 ```text
 config/
@@ -250,14 +250,12 @@ Variabel produksi dan langkah konfigurasi lanjutan ada di [README](../README.md#
 
 ## 8. Pengujian
 
-[Dokumentasi pengujian](testing.md) memuat perintah uji otomatis, hasil pemeriksaan lokal, langkah pengecekan di browser, dan cara memastikan pesan dari situs publik masuk ke Supabase. Uji regresi di `portfolio/tests.py` mencakup batas login dan formulir kontak, pesan peringatan login, serta waktu tunggu melalui `Retry-After`.
+[Dokumentasi pengujian](testing.md) memuat perintah uji otomatis, hasil pemeriksaan lokal, konfirmasi produksi, dan langkah untuk memeriksa ulang pesan di Supabase setelah deploy berikutnya. Uji regresi di `portfolio/tests.py` mencakup batas login dan formulir kontak, pesan peringatan login, serta waktu tunggu melalui `Retry-After`.
 
 ## 9. Rilis dan pemeliharaan
 
-1. Terapkan migrasi pada database Supabase yang dituju dan pastikan akun admin sudah tersedia.
-2. Impor repositori ke Vercel dan isi variabel lingkungan produksi dari dashboard. Gunakan `DJANGO_DEBUG=0`, kunci Django unik, serta `DATABASE_URL` untuk Supabase.
-3. Deploy aplikasi Django dari direktori yang berisi `manage.py`. Verifikasi aset statis di halaman hasil deploy.
-4. Uji login, publikasi proyek, tampilan gambar, dan pengiriman pesan dari URL produksi. Cocokkan pesan uji yang masuk di Supabase dengan tampilan dashboard.
-5. Untuk pembaruan berikutnya, perbarui konten proyek dari dashboard. Jika model berubah, buat migrasi, uji secara lokal, lalu terapkan migrasi ke database tujuan sebelum merilis kode baru.
+Rilis produksi sudah selesai. Django berjalan di Vercel dan menyimpan data di Supabase. Pemilik proyek mengonfirmasi semua fitur berjalan tanpa kendala setelah deploy. Catatan hasil lokal dan konfirmasi produksi tersedia di [dokumentasi pengujian](testing.md).
 
-Panduan setup dan [langkah deploy manual](../README.md#deploy-manual-ke-vercel) tersedia di README. Tahap rilis selesai setelah alur publik dan admin berhasil diuji pada URL hasil deploy dengan database Supabase yang dipilih.
+Pembaruan konten proyek dilakukan dari dashboard. Untuk pembaruan kode, jalankan uji lokal terlebih dahulu. Jika ada perubahan model, buat dan uji migrasinya, lalu terapkan ke database tujuan sebelum deploy versi baru. Setelah deploy, periksa kembali halaman publik, login admin, publikasi proyek, gambar, dan pesan kontak.
+
+Panduan menyiapkan instalasi baru ada di [langkah deploy manual ke Vercel](../README.md#deploy-manual-ke-vercel).

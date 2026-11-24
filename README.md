@@ -2,7 +2,9 @@
 
 Portofolio pribadi berbasis Django 5.2 dengan HTML, CSS, dan JavaScript. Pengunjung bisa melihat profil, catatan studi, dan proyek yang sudah dipublikasikan serta mengirim pesan lewat formulir kontak. Dashboard khusus admin digunakan untuk mengelola proyek, gambar, dan pesan.
 
-[Dokumentasi proyek](docs/dokumentasi.md) memuat perencanaan, diagram alur data, CRUD, dan pengiriman pesan ke Supabase. [Dokumentasi pengujian](docs/testing.md) memuat hasil uji lokal dan langkah verifikasi di browser serta deployment.
+Aplikasi sudah dirilis di Vercel dengan Supabase sebagai database produksi. Pemilik proyek mengonfirmasi fitur berjalan tanpa kendala setelah deploy.
+
+Lihat [dokumentasi proyek](docs/dokumentasi.md) untuk arsitektur, diagram CRUD, dan alur pesan. [Dokumentasi pengujian](docs/testing.md) mencatat hasil uji lokal dan konfirmasi produksi.
 
 ## Jalankan lokal
 
@@ -59,9 +61,13 @@ Akses dashboard diberikan kepada akun admin aktif yang dibuat dengan `python man
 
 ## Deploy manual ke Vercel
 
+Gunakan langkah ini saat menyiapkan instalasi baru di Vercel.
+
 1. Impor repositori dari dashboard Vercel. Pilih direktori akar yang berisi `manage.py` dan gunakan konfigurasi Django yang terdeteksi. Aset statis dikumpulkan melalui `STATIC_ROOT`.
 2. Isi environment variables produksi di Vercel. Setel `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY`, `DATABASE_URL`, serta `DJANGO_DB_SCHEMA` bila memakai skema khusus. Buat kunci Django dengan `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`. Jika memakai domain kustom, isi juga `DJANGO_ALLOWED_HOSTS` dan `DJANGO_CSRF_TRUSTED_ORIGINS`.
 3. Terapkan migrasi ke database produksi sebelum deploy. Sesudah deploy, uji halaman publik, login admin, publikasi proyek, unggahan gambar, dan formulir kontak. Saat berjalan di Vercel, Django mematikan mode debug dan mengirim header HSTS selama 300 detik.
+
+Untuk pembaruan situs yang sudah live, uji perubahan secara lokal, terapkan migrasi baru ke Supabase jika ada, lalu deploy versi terbaru. Setelah itu, ulangi [pengecekan produksi](docs/testing.md#4-cek-ulang-setelah-deploy).
 
 [Contoh deployment Django di Vercel](https://vercel.com/templates/python/django-hello-world)
 

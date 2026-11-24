@@ -1,6 +1,6 @@
 # Pengujian Portofolio 'Athif
 
-Dokumen ini mencatat hasil uji lokal dan langkah untuk mengulang pengujian. Lihat [dokumentasi proyek](dokumentasi.md) untuk arsitektur dan diagram alur.
+Dokumen ini mencatat hasil uji lokal, konfirmasi produksi dari pemilik proyek, dan langkah untuk mengulang pengujian. Lihat [dokumentasi proyek](dokumentasi.md) untuk arsitektur dan diagram alur.
 
 ## 1. Jalankan pemeriksaan lokal
 
@@ -23,7 +23,7 @@ node --check static/portfolio/js/site.js
 
 ## 2. Hasil yang sudah diverifikasi
 
-Pemeriksaan ini dijalankan dengan database SQLite sementara. Supabase, deploy Vercel, dan tampilan langsung di browser tidak diuji pada pemeriksaan ini.
+Uji lokal ini dijalankan dengan database SQLite sementara. Konfirmasi dari penggunaan di Vercel dan Supabase dicatat pada bagian produksi di bawah.
 
 | Pemeriksaan                                                     | Hasil                                                                                                                                                                           |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -68,7 +68,11 @@ Buka `http://127.0.0.1:8000/`. Pakai jendela privat untuk pengujian publik dan j
 
 Hentikan server lokal dengan Ctrl+C setelah pengujian.
 
-## 4. Verifikasi Supabase dan Vercel
+## 4. Cek ulang setelah deploy
+
+**Status rilis:** layanan sudah live di Vercel dengan database Supabase. Pemilik proyek mengonfirmasi fitur berjalan tanpa kendala setelah deploy. Konfirmasi ini mencatat hasil penggunaan produksi yang dilaporkan. Detail per skenario, perangkat, dan hasil pemeriksaan izin database dapat dicatat saat pengecekan berikutnya.
+
+Gunakan langkah berikut setelah menerbitkan pembaruan.
 
 1. Pastikan deploy memakai `DATABASE_URL` dan `DJANGO_DB_SCHEMA` yang benar. Dari lingkungan yang tersambung ke database tujuan, jalankan `python manage.py showmigrations portfolio` dan cek migrasi `0001`, `0002`, dan `0003` bertanda `[X]`.
 2. Buka URL hasil deploy dan pastikan beranda, aset, serta login admin bisa dimuat melalui HTTPS.
